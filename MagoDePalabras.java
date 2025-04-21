@@ -524,8 +524,22 @@ public class MagoDePalabras {
         jugador.eliminarPalabra(respuesta,+5);
     }
 
-    public void iniciarMagoDePalabras() {
+    public void jugarRondaDePalabras(List<Jugador> jugadores, int modoDeJuego, int numeroDeRonda) {
+        this.jugadores = jugadores;
+        this.modoDeJuego = modoDeJuego;
+        this.rondaActual = numeroDeRonda;
+        this.turnoActual = 0;
+        this.pasesConsecutivos = 0;
+        this.rondaActiva = true;
 
+        palabrasUsadas.clear();
+        jugadores.forEach(jugador -> jugador.reiniciarPalabrasUsadas());
+
+        HashSet<Character> letras = (modoDeJuego == 1) ?
+                generarLetrasAleatoriasNormal() : generarLetrasAleatoriasExperto();
+        agregarLetrasEnJuego(letras);
+
+        mostrarTurnoActual();
     }
 
 
