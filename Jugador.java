@@ -15,6 +15,13 @@ public class Jugador {
         this.palabrasUsadas = new HashSet<>();
         this.puntuacionTotal = 0;
     }
+
+    // Metodo para eliminar palabras al HashSet, recibe como parametro la palabra a agregar y la puntuacion que se le acumulara.
+    public void eliminarPalabra(String palabra, int puntuacion) {
+        this.palabrasUsadas.remove(palabra);
+        this.puntuacionTotal += puntuacion;
+    }
+
     // Metodo para agregar palabras al HashSet, recibe como parametro la palabra a agregar y la puntuacion que se le acumulara.
     public void agregarPalabra(String palabra, int puntuacion) {
         palabrasUsadas.add(palabra.toLowerCase());

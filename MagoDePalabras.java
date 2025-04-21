@@ -16,6 +16,7 @@ public class MagoDePalabras {
     private HashSet<Character> letrasEnJuego;
     private List<Jugador> jugadores;
     private int pasesConsecutivos;
+    private int modoDeJuego;
     private int rondaActual;
     private int turnoActual;
     private boolean rondaActiva;
@@ -304,7 +305,6 @@ public class MagoDePalabras {
         }
     }
 
-
     // Metodo para formar las palabras ya formadas por los jugadores.
     public void mostrarPalabrasUsadas(JTextArea areaPalabrasUsadas) {
         if (areaPalabrasUsadas != null) {
@@ -460,6 +460,7 @@ public class MagoDePalabras {
         botonRegistrar.addActionListener(e -> {
         });
 
+        actualizarInterfaz();
         ventanaJuegoActual.add(panelPrincipal);
         ventanaJuegoActual.setVisible(true);
     }
@@ -480,6 +481,48 @@ public class MagoDePalabras {
         mostrarTurnoActual();
     }
 
+    private void actualizarInterfaz() {
+        mostrarPalabrasUsadas(areaPalabrasUsadas);
+
+        StringBuilder sb = new StringBuilder();
+        for (Jugador jugador : jugadores) {
+            sb.append("\u27A4  " + jugador.getNombre()).append(":   ").append(jugador.getPuntuacionTotal()).append("   Puntos \n");
+        }
+        if (areaPuntuacion != null) {
+            areaPuntuacion.setText(sb.toString());
+        }
+    }
+
+    private void procesarRespuesta(Jugador jugador, String respuesta) {
+        if (modoDeJuego == 1) {
+            analisisDeRespuestaNormal(jugador, respuesta);
+        } else {
+            analisisDeRespuestaExperto(jugador, respuesta);
+        }
+        pasesConsecutivos = 0;
+        jugador.eliminarPalabra(respuesta, 0);
+        palabrasUsadas.remove(respuesta);
+        if (validarEntrada(jugador, respuesta)) {
+            jugador.agregarPalabra(respuesta, 0);
+            palabrasUsadas.add(respuesta);
+            pasarAlSiguienteJugador();
+        } else if (validarEntradaExperto(jugador, respuesta)) {
+            jugador.agregarPalabra(respuesta, 0);
+            palabrasUsadas.add(respuesta);
+            pasarAlSiguienteJugador();
+        }
+        actualizarInterfaz();
+    }
+
+    private void registrarPalabra(Jugador jugador, String respuesta) {
+        try (FileWriter escritor = new FileWriter("C:\\Users\\PC OSTRICH\\Practica-6\\palabras.txt", true)) {
+            escritor.write(respuesta + System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cargarArchivo("C:\\Users\\PC OSTRICH\\Practica-6\\palabras.txt");
+        jugador.eliminarPalabra(respuesta,+5);
+    }
 
     public void iniciarMagoDePalabras() {
 
