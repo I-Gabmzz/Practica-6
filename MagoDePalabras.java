@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // Se crea la clase MagoDePalabras.
 public class MagoDePalabras {
@@ -14,8 +15,10 @@ public class MagoDePalabras {
     private HashSet<String> palabrasUsadas;
     private HashSet<Character> letrasEnJuego;
     private List<Jugador> jugadores;
+    private int pasesConsecutivos;
     private int rondaActual;
     private int turnoActual;
+    private boolean rondaActiva;
     private JFrame ventanaJuegoActual;
     private JTextArea areaPalabrasUsadas;
     private JTextArea areaPuntuacion;
@@ -303,27 +306,21 @@ public class MagoDePalabras {
 
 
     // Metodo para formar las palabras ya formadas por los jugadores.
-    public void mostrarPalabrasUsadas() {
-        final String negritaMorado = "\u001B[1;35m";
-        final String reset = "\u001B[0m";
-
-        if (palabrasUsadas.isEmpty()) {
-            System.out.println(negritaMorado + "\n\nNo hay palabras usadas" + reset);
-            return;
+    public void mostrarPalabrasUsadas(JTextArea areaPalabrasUsadas) {
+        if (areaPalabrasUsadas != null) {
+            areaPalabrasUsadas.setText("");
+            List<String> palabrasOrdenadas = palabrasUsadas.stream()
+                    .sorted()
+                    .collect(Collectors.toList());
+            for (String palabra : palabrasOrdenadas) {
+                Integer puntuacion = diccionario.getOrDefault(palabra, null);
+                if (puntuacion != null) {
+                    areaPalabrasUsadas.append("\u2726  " + palabra + "                          | " + puntuacion + "\n");
+                } else {
+                    areaPalabrasUsadas.append("\u2726  " + palabra + "                          |  Sin puntuación\n");
+                }
+            }
         }
-
-        System.out.println(negritaMorado + "\n\nPalabras usadas y sus puntuaciones:" + reset);
-
-        palabrasUsadas.stream()
-                .sorted()
-                .forEach(palabra -> {
-                    Integer puntuacion = diccionario.getOrDefault(palabra, null);
-                    if (puntuacion != null) {
-                        System.out.println(palabra + " ---> " + puntuacion);
-                    } else {
-                        System.out.println(palabra + " -> Sin puntuación");
-                    }
-                });
     }
 
     private void mostrarTurnoActual() {
@@ -454,6 +451,10 @@ public class MagoDePalabras {
 
 
         botonPasarTurno.addActionListener(e -> {
+            pasarTurno();
+            if (rondaActiva) {
+                pasarAlSiguienteJugador();
+            }
         });
 
         botonRegistrar.addActionListener(e -> {
@@ -463,6 +464,21 @@ public class MagoDePalabras {
         ventanaJuegoActual.setVisible(true);
     }
 
+    private void pasarTurno() {
+        pasesConsecutivos++;
+        if (pasesConsecutivos >= jugadores.size()) {
+            ventanaJuegoActual.dispose();
+            rondaActiva = false;
+            JOptionPane.showMessageDialog(ventanaJuegoActual, "\uD83D\uDCE2 Ronda terminada por pases consecutivos", "Pase de jugador", JOptionPane.INFORMATION_MESSAGE);
+            turnoActual = (turnoActual - 1) % jugadores.size();
+        }
+    }
+
+    private void pasarAlSiguienteJugador() {
+        turnoActual = (turnoActual + 1) % jugadores.size();
+        ventanaJuegoActual.dispose();
+        mostrarTurnoActual();
+    }
 
 
     public void iniciarMagoDePalabras() {
