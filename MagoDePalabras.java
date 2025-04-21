@@ -1,4 +1,4 @@
-// Se importan las librerias necesarias para la clase.
+//Se importan las librerias necesarias para la clase
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Se crea la clase MagoDePalabras.
+//Se declara la clase mago de palabras
 public class MagoDePalabras {
-    // Se declaran los atributos de la clase.
+    //Se declaran los atributos de la clase que se usaran
     private Random random;
     private HashMap<String, Integer> diccionario;
     private HashMap<String, Integer> puntuaciones;
@@ -24,7 +24,7 @@ public class MagoDePalabras {
     private JTextArea areaPalabrasUsadas;
     private JTextArea areaPuntuacion;
 
-    // Se declara el constructor de la clase.
+    //Se crea el constructor de la clase en la que se inicializan todos los atributos y se carga el archivo de palabras
     public MagoDePalabras() {
         random = new Random();
         diccionario = new HashMap<>();
@@ -35,7 +35,7 @@ public class MagoDePalabras {
        // cargarArchivo("C:\\Users\\14321\\IdeaProjects\\Practica-5\\palabras.txt");
     }
 
-    // Metodo para cargar el archivo de las palabras.
+    //Metodo para cargar el archivo de palabras y almacenarlas en un HashMap
     public void cargarArchivo(String archivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
@@ -48,7 +48,7 @@ public class MagoDePalabras {
         }
     }
 
-    // Metodo para calcular los puntos de la palabra.
+    //Metodo para calcular los puntos, teniendo como parametro la palabra que se desea puntuar
     public int calcularPuntos(String palabra) {
         int puntos = 0;
         String vocales = "aeiouáéíóú";
@@ -63,7 +63,8 @@ public class MagoDePalabras {
         return puntos;
     }
 
-    // Metodo para generar letras aleatorias segun el modo normal.
+    //Metodo que genera las letras de manera aleatoria para el modo de juego normal en el cual no se incluyen letras con acentos
+    //en este metodo se reparten letras hasta que toque un set de letras con la cual se puedan formar como minimo dos palabras
     private HashSet<Character> generarLetrasAleatoriasNormal() {
         HashSet<Character> letras = new HashSet<>();
 
@@ -87,7 +88,8 @@ public class MagoDePalabras {
         return letras;
     }
 
-    //Metodo para generar letras aleatorias segun el modo experto.
+    //Metodo que genera las letras de manera aleatoria para el modo de juego experto en el cual se incluyen letras con acentos
+    //en este metodo se reparten letras hasta que toque un set de letras con la cual se puedan formar como minimo dos palabras
     public HashSet<Character> generarLetrasAleatoriasExperto() {
         HashSet<Character> letras = new HashSet<>();
 
@@ -110,7 +112,9 @@ public class MagoDePalabras {
         return letras;
     }
 
-
+    //Metodo para determinar si se pueden formar dos palabras en el cual se itera por cada palabra que haya en el diccionario de palabras
+    //comprobando que se pueda formar una palabra con las letras disponibles del set, despues se evalua que se pueda formar una palabra distinta a la primera
+    //para poder verificar que se puedan formar como minimo dos palabras con el set de letras dadas
     private boolean sePuedenFormarPalabras(HashSet<Character> letras) {
         List<Character> letrasDisponibles = new ArrayList<>(letras);
         String primeraPalabra = null;
@@ -139,7 +143,7 @@ public class MagoDePalabras {
 
         return false;
     }
-
+    //Metodo para validar si una palabra es valida con las letras del set que se repartieron
     private boolean palabraValidaConLetras(String palabra, List<Character> letrasDisponibles) {
         List<Character> letrasTemp = new ArrayList<>(letrasDisponibles);
 
@@ -152,18 +156,18 @@ public class MagoDePalabras {
         return true;
     }
 
-    // Metodo para agregar letras en el juego.
+    //Metodo para agregar las letras que se repartieron al HashSet de letras que se jugara en la ronda
     public void agregarLetrasEnJuego(HashSet<Character> letrasRonda) {
         letrasEnJuego.clear();
         letrasEnJuego.addAll(letrasRonda);
     }
 
-    // Metodo para saber si ya se uso una palabra.
+    //Metodo para verificar que una palabra ya se uso por un jugador
     public boolean yaSeUsoEsaPalabra(String palabra) {
         return palabrasUsadas.contains(palabra.toUpperCase());
     }
 
-    // Metodo para saber si la palabra ingresada tiene letras validas en el modo normal.
+    //Metodo para verificar si la palabra tiene letras validas en el modo de juego normal
     public boolean tieneLetrasValidasNormal(String palabra) {
         Set<Character> letrasDisponibles = new HashSet<>(letrasEnJuego);
         for (int i = 0; i < palabra.length(); i++) {
@@ -175,7 +179,7 @@ public class MagoDePalabras {
         return true;
     }
 
-    //Metodo para saber si la palabra ingresada tiene letras validas en el modo experto.
+    //Metodo para verificar si la palabra tiene letras validas en el modo de juego experto
     public boolean tieneLetrasValidasExperto(String palabra) {
         if (palabra.length() > letrasEnJuego.size()) {
             return false;
@@ -196,12 +200,12 @@ public class MagoDePalabras {
         return true;
     }
 
-    // Metodo para agregar la palabra a las palabras usadas
+    //Metodo para agregar la palabra al HashSet de palabras usadas
     public void agregarPalabrasUsadas(String palabra) {
         palabrasUsadas.add(palabra.toLowerCase());
     }
 
-    // Metodo para validar la entrada segun el modo normal.
+    //Metodo para validar que la respuesta del jugador sea correcta en el modo normal
     public boolean validarEntrada(Jugador jugador, String respuesta) {
         if (jugador.yaUsoEstaPalabra(respuesta)) {
             return false;
@@ -218,7 +222,7 @@ public class MagoDePalabras {
         return true;
     }
 
-    // Metodo para validar la entrada segun el modo experto.
+    //Metodo para validar que la respuesta del jugador sea correcta en el modo experto
     public boolean validarEntradaExperto(Jugador jugador, String respuesta) {
         if (jugador.yaUsoEstaPalabra(respuesta)) {
             return false;
@@ -235,7 +239,8 @@ public class MagoDePalabras {
         return true;
     }
 
-    // Metodo para analizar la respuesta de acuerdo a las reglas del juego y segun el modo normal.
+    //Metodo para analizar la respuesta del jugador en el modo normal, se verifica que el jugador no use una palabra que ya haya sido usada,
+    // se evalua que la respuesta tenga letras validas y que se encuentre en el diccionario realizando las puntuaciones correspondientes.
     public void analisisDeRespuestaNormal(Jugador jugador, String respuesta) {
         if (jugador.yaUsoEstaPalabra(respuesta)) {
             jugador.agregarPalabra(respuesta, -5);
@@ -270,7 +275,8 @@ public class MagoDePalabras {
         }
     }
 
-    // Metodo para analizar la respuesta de acuerdo a las reglas del juego y segun el modo experto.
+    //Metodo para analizar la respuesta del jugador en el modo experto, se verifica que el jugador no use una palabra que ya haya sido usada,
+    // se evalua que la respuesta tenga letras validas y que se encuentre en el diccionario realizando las puntuaciones correspondientes.
     public void analisisDeRespuestaExperto(Jugador jugador, String respuesta) {
         if (jugador.yaUsoEstaPalabra(respuesta)) {
             jugador.agregarPalabra(respuesta, -5);
@@ -305,7 +311,7 @@ public class MagoDePalabras {
         }
     }
 
-    // Metodo para formar las palabras ya formadas por los jugadores.
+    //Metodo para mostrar las palabras que se han usado hasta el momento en orden alfabetico con su respectivo puntaje
     public void mostrarPalabrasUsadas(JTextArea areaPalabrasUsadas) {
         if (areaPalabrasUsadas != null) {
             areaPalabrasUsadas.setText("");
@@ -322,7 +328,9 @@ public class MagoDePalabras {
             }
         }
     }
-
+    //Metodo para mostrar el turno actual del juego mostrando los aspectos fundamentales del juego en la interfaz para que el jugador pueda jugar de manera correcta
+    //en este metodo el jugador interactua con los botones, espacios de texto para escribir la palabra, ver la puntuacion de los jugadores y las palabras que se han
+    //usado
     private void mostrarTurnoActual() {
         Jugador jugadorActual = jugadores.get(turnoActual);
         ventanaJuegoActual = new JFrame("\uD83C\uDFAE Mago de Palabras - Ronda " + rondaActual + " - Turno de: " + jugadorActual.getNombre());
@@ -479,7 +487,7 @@ public class MagoDePalabras {
         ventanaJuegoActual.add(panelPrincipal);
         ventanaJuegoActual.setVisible(true);
     }
-
+    //Metodo para pasar turno, si el pase de turnos es consecutivo en todos los jugadores, se termina la ronda y comienza una nueva
     private void pasarTurno() {
         pasesConsecutivos++;
         if (pasesConsecutivos >= jugadores.size()) {
@@ -489,13 +497,13 @@ public class MagoDePalabras {
             turnoActual = (turnoActual - 1) % jugadores.size();
         }
     }
-
+    //Metodo para que se cambie de turno
     private void pasarAlSiguienteJugador() {
         turnoActual = (turnoActual + 1) % jugadores.size();
         ventanaJuegoActual.dispose();
         mostrarTurnoActual();
     }
-
+    //Metodo para actualizar la interfaz
     private void actualizarInterfaz() {
         mostrarPalabrasUsadas(areaPalabrasUsadas);
 
@@ -507,7 +515,7 @@ public class MagoDePalabras {
             areaPuntuacion.setText(sb.toString());
         }
     }
-
+    //Metodo que procesa la respuesta del jugador dependiendo el modo de juego en el que se encuentre, en el cual se valida la respuesta dada.
     private void procesarRespuesta(Jugador jugador, String respuesta) {
         if (modoDeJuego == 1) {
             analisisDeRespuestaNormal(jugador, respuesta);
@@ -528,7 +536,7 @@ public class MagoDePalabras {
         }
         actualizarInterfaz();
     }
-
+    //Metodo para registrar una nueva palabra en el diccionario de palabras si es que no se encontraba anteriormente
     private void registrarPalabra(Jugador jugador, String respuesta) {
         try (FileWriter escritor = new FileWriter("C:\\Users\\PC OSTRICH\\Practica-6\\palabras.txt", true)) {
             escritor.write(respuesta + System.lineSeparator());
@@ -538,7 +546,8 @@ public class MagoDePalabras {
         cargarArchivo("C:\\Users\\PC OSTRICH\\Practica-6\\palabras.txt");
         jugador.eliminarPalabra(respuesta,+5);
     }
-
+    //Metodo para jugar una ronda del juego en el cual se inicializan los jugadores,
+    //se juega dependiendo el modo de juego y el numero de ronda en el que se encuentre el juego
     public void jugarRondaDePalabras(List<Jugador> jugadores, int modoDeJuego, int numeroDeRonda) {
         this.jugadores = jugadores;
         this.modoDeJuego = modoDeJuego;
@@ -557,7 +566,7 @@ public class MagoDePalabras {
         mostrarTurnoActual();
     }
 
-
+    //Metodo en donde se incia el juego, preguntando el numero de jugadores, nombre y modo, para despues jugar el juego
     public void iniciarMagoDePalabras() {
         InterfazGrafica.menuInicial();
         jugadores = new ArrayList<>();
@@ -599,6 +608,71 @@ public class MagoDePalabras {
                 }
             }
         }
+        mostrarResultadosFinales();
+    }
+
+    //Metodo para mostrar el ganador del juego, mostrar puntuaciones finales y un mensaje de despedida
+    private void mostrarResultadosFinales() {
+        ventanaJuegoActual.dispose();
+
+        JFrame frameFinal = new JFrame("\uD83C\uDFC6 Resultados Finales - Mago de Palabras");
+        frameFinal.setSize(400, 600);
+        frameFinal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameFinal.setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JLabel banner = new JLabel(new ImageIcon("C:\\Users\\14321\\Downloads\\Practica-5-main\\bannerFinal.gif"));
+        banner.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(banner, BorderLayout.NORTH);
+
+        jugadores.sort((j1, j2) -> Integer.compare(j2.getPuntuacionTotal(), j1.getPuntuacionTotal()));
+
+        JPanel panelResultados = new JPanel();
+        panelResultados.setLayout(new BoxLayout(panelResultados, BoxLayout.Y_AXIS));
+        panelResultados.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+
+        JPanel panelTitulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel titulo = new JLabel("\uD83C\uDFC6 Puntuaciones Finales");
+        titulo.setFont(new Font("Noto Sans", Font.BOLD, 24));
+        titulo.setForeground(new Color(0, 102, 204));
+        panelTitulo.add(titulo);
+        panelResultados.add(panelTitulo);
+        panelResultados.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        for (int i = 0; i < jugadores.size(); i++) {
+            Jugador jugador = jugadores.get(i);
+            JPanel panelJugador = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JLabel labelJugador = new JLabel(
+                    (i == 0 ? "\uD83E\uDD47 " : i == 1 ? "\uD83E\uDD48 " : i == 2 ? "\uD83E\uDD49 " : "▸ ") +
+                            jugador.getNombre() + ": " + jugador.getPuntuacionTotal() + " puntos"
+            );
+            labelJugador.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+            panelJugador.add(labelJugador);
+            panelResultados.add(panelJugador);
+            panelResultados.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        panel.add(panelResultados, BorderLayout.CENTER);
+
+        JButton botonSalir = new JButton("Salir del Juego");
+
+        botonSalir.setFont(new Font("Noto Sans", Font.BOLD, 16));
+        botonSalir.setFocusPainted(false);
+        botonSalir.setBackground(new Color(220, 220, 220));
+        botonSalir.setBorder(BorderFactory.createEtchedBorder());
+        botonSalir.addActionListener(e -> System.exit(0));
+
+        frameFinal.getRootPane().setDefaultButton(botonSalir);
+
+        JPanel panelBoton = new JPanel();
+        panelBoton.add(botonSalir);
+        panel.add(panelBoton, BorderLayout.SOUTH);
+
+        frameFinal.add(panel);
+        frameFinal.setVisible(true);
+        ventanaJuegoActual = frameFinal;
     }
 
 }
