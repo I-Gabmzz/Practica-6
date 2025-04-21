@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class InterfazGrafica {
@@ -244,5 +243,83 @@ public class InterfazGrafica {
 
         return nombre.get();
     }
+
+
+
+
+    public static int solicitarModoDeJuego() {
+        AtomicInteger modoSeleccionado = new AtomicInteger(0);
+
+        JDialog modo = new JDialog();
+        modo.setTitle("Modo de Juego");
+        modo.setSize(450, 250);
+        modo.setLocationRelativeTo(null);
+        modo.setModal(true);
+        modo.setResizable(true);
+
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titulo = new JLabel("MODOS DE JUEGO", SwingConstants.CENTER);
+        titulo.setFont(new Font("Noto Sans", Font.BOLD, 24));
+        titulo.setForeground(new Color(0, 102, 204));
+        panelPrincipal.add(titulo, BorderLayout.NORTH);
+
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 15, 15));
+
+        JButton botonNormal = new JButton(" Normal ");
+        JButton botonExperto = new JButton(" Experto ");
+
+        Font fuenteBotones = new Font("Noto Sans", Font.BOLD, 18);
+        Color colorBoton = new Color(220, 220, 220);
+
+        Stream.of(botonNormal, botonExperto).forEach(boton -> {
+            boton.setFont(fuenteBotones);
+            boton.setBackground(colorBoton);
+            boton.setFocusPainted(false);
+        });
+
+        UIManager.put("ToolTip.background", new Color(255, 255, 205));
+        UIManager.put("ToolTip.foreground", Color.BLACK);
+        UIManager.put("ToolTip.font", new Font("Noto Sans", Font.PLAIN, 14));
+
+        botonNormal.setToolTipText("<html>Reglas del modo normal:<br> • Vocales sin acentos<br> • Letras repetibles</html>");
+        botonExperto.setToolTipText("<html>Reglas del modo experto:<br> • Vocales con acentos<br> • Letras no repetibles</html>");
+
+        botonNormal.addActionListener(e -> {
+            modoSeleccionado.set(1);
+            modo.dispose();
+        });
+
+        botonExperto.addActionListener(e -> {
+            modoSeleccionado.set(2);
+            modo.dispose();
+        });
+
+        panelBotones.add(botonNormal);
+        panelBotones.add(botonExperto);
+
+        panelPrincipal.add(panelBotones, BorderLayout.CENTER);
+        modo.add(panelPrincipal);
+        modo.setVisible(true);
+
+        return modoSeleccionado.get();
+    }
+
+    public static void mostrarPalabraCorrecta(String aviso, int puntuacion, int puntosTotales) {
+        String mensaje = "La palabra es correcta | " + aviso + " | -----> + " + puntuacion
+                + " puntos \u2705 | (Puntos Totales: " + puntosTotales + ")";
+        JOptionPane.showMessageDialog(null, mensaje, "Correcto", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void mostrarPalabraIncorrecta(String aviso) {
+        JOptionPane.showMessageDialog(null, "\u274C " + aviso, "Incorrecto", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void mostrarMensajeError(){
+        JDialog nombreIncorrecto = new JDialog();
+        JOptionPane.showMessageDialog(nombreIncorrecto, "No puede ingresar nombres duplicados", "Error", JOptionPane.WARNING_MESSAGE);
+    }
+
 
 }
