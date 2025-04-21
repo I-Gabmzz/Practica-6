@@ -445,6 +445,13 @@ public class MagoDePalabras {
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         botonPuntuar.addActionListener(e -> {
+            String respuesta = campoEscritura.getText().trim().toLowerCase();
+            if (!respuesta.isEmpty()) {
+                procesarRespuesta(jugadorActual, respuesta);
+                campoEscritura.setText("");
+            } else {
+                JOptionPane.showMessageDialog(ventanaJuegoActual, "Debe ingresar una palabra", "Error", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         campoEscritura.addActionListener(e -> botonPuntuar.doClick());
@@ -458,6 +465,14 @@ public class MagoDePalabras {
         });
 
         botonRegistrar.addActionListener(e -> {
+            String respuesta = campoEscritura.getText().trim().toLowerCase();
+            if (!respuesta.isEmpty()) {
+                registrarPalabra(jugadorActual, respuesta);
+                procesarRespuesta(jugadorActual, respuesta);
+                campoEscritura.setText("");
+            } else {
+                JOptionPane.showMessageDialog(ventanaJuegoActual, "Debe ingresar una palabra", "Error", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         actualizarInterfaz();
