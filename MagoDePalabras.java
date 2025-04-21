@@ -60,39 +60,92 @@ public class MagoDePalabras {
     }
 
     // Metodo para generar letras aleatorias segun el modo normal.
-    public HashSet<Character> generarLetrasAleatoriasNormal() {
+    private HashSet<Character> generarLetrasAleatoriasNormal() {
         HashSet<Character> letras = new HashSet<>();
-        String vocales = "aeiou";
-        String consonantes = "bcdfghjklmnpqrstvwxyz";
 
-        while (letras.size() < 3) {
-            char vocal = vocales.charAt(random.nextInt(vocales.length()));
-            letras.add(vocal);
-        }
+        do {
+            letras.clear();
+            String vocales = "aeiou";
+            String consonantes = "bcdfghjklmnpqrstvwxyz";
 
-        while (letras.size() < 10) {
-            char consonante = consonantes.charAt(random.nextInt(consonantes.length()));
-            letras.add(consonante);
-        }
+            while (letras.size() < 3) {
+                char vocal = vocales.charAt(random.nextInt(vocales.length()));
+                letras.add(vocal);
+            }
+
+            while (letras.size() < 10) {
+                char consonante = consonantes.charAt(random.nextInt(consonantes.length()));
+                letras.add(consonante);
+            }
+
+        } while (!sePuedenFormarPalabras(letras));
+
         return letras;
     }
 
     //Metodo para generar letras aleatorias segun el modo experto.
     public HashSet<Character> generarLetrasAleatoriasExperto() {
         HashSet<Character> letras = new HashSet<>();
-        String vocales = "aeiouáéíóú";
-        String consonantes = "bcdfghjklmnpqrstvwxyz";
 
-        while (letras.size() < 3) {
-            char vocal = vocales.charAt(random.nextInt(vocales.length()));
-            letras.add(vocal);
-        }
+        do {
+            letras.clear();
+            String vocales = "aeiouáéíóú";
+            String consonantes = "bcdfghjklmnpqrstvwxyz";
 
-        while (letras.size() < 10) {
-            char consonante = consonantes.charAt(random.nextInt(consonantes.length()));
-            letras.add(consonante);
-        }
+            while (letras.size() < 4) {
+                char vocal = vocales.charAt(random.nextInt(vocales.length()));
+                letras.add(vocal);
+            }
+            while (letras.size() < 10) {
+                char consonante = consonantes.charAt(random.nextInt(consonantes.length()));
+                letras.add(consonante);
+            }
+
+        } while (!sePuedenFormarPalabras(letras));
+
         return letras;
+    }
+
+
+    private boolean sePuedenFormarPalabras(HashSet<Character> letras) {
+        List<Character> letrasDisponibles = new ArrayList<>(letras);
+        String primeraPalabra = null;
+
+        for (String palabra : diccionario.keySet()) {
+            if (palabraValidaConLetras(palabra, letrasDisponibles)) {
+                primeraPalabra = palabra;
+                break;
+            }
+        }
+
+        if (primeraPalabra == null) {
+            return false;
+        }
+
+        List<Character> letrasRestantes = new ArrayList<>(letras);
+        for (char c : primeraPalabra.toCharArray()) {
+            letrasRestantes.remove((Character) c);
+        }
+
+        for (String palabra : diccionario.keySet()) {
+            if (palabraValidaConLetras(palabra, letrasRestantes)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean palabraValidaConLetras(String palabra, List<Character> letrasDisponibles) {
+        List<Character> letrasTemp = new ArrayList<>(letrasDisponibles);
+
+        for (int i = 0; i < palabra.length(); i++) {
+            char letra = palabra.charAt(i);
+            if (!letrasTemp.remove((Character) letra)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Metodo para agregar letras en el juego.

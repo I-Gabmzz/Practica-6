@@ -135,6 +135,114 @@ public class InterfazGrafica {
         creditos.setVisible(true);
     }
 
+    public static int solicitarJugadores() {
+        AtomicInteger numeroDeJugadores = new AtomicInteger();
+
+        JDialog jugadores = new JDialog();
+        jugadores.setTitle("Número de Jugadores");
+        jugadores.setSize(500, 150);
+        jugadores.setLocationRelativeTo(null);
+        jugadores.setModal(true);
+        jugadores.setResizable(true);
+
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titulo = new JLabel("Seleccione el número de jugadores \uD83D\uDC65", SwingConstants.CENTER);
+        titulo.setFont(new Font("Noto Sans", Font.BOLD, 24));
+        titulo.setForeground(new Color(0, 102, 204));
+        panelPrincipal.add(titulo, BorderLayout.NORTH);
+
+        JPanel panelBotones = new JPanel(new GridLayout(1, 3, 15, 15));
+
+        JButton boton2 = new JButton(" 2 ");
+        JButton boton3 = new JButton(" 3 ");
+        JButton boton4 = new JButton(" 4 ");
+
+        Font fuenteBotones = new Font("Noto Sans", Font.BOLD, 18);
+        Color colorBoton = new Color(220, 220, 220);
+
+        Stream.of(boton2, boton3, boton4).forEach(boton -> {
+            boton.setFont(fuenteBotones);
+            boton.setBackground(colorBoton);
+            boton.setFocusPainted(false);
+        });
+
+        boton2.addActionListener(e -> {
+            numeroDeJugadores.set(2);
+            jugadores.dispose();
+        });
+
+        boton3.addActionListener(e -> {
+            numeroDeJugadores.set(3);
+            jugadores.dispose();
+        });
+
+        boton4.addActionListener(e -> {
+            numeroDeJugadores.set(4);
+            jugadores.dispose();
+        });
+
+        panelBotones.add(boton2);
+        panelBotones.add(boton3);
+        panelBotones.add(boton4);
+
+        panelPrincipal.add(panelBotones, BorderLayout.CENTER);
+        jugadores.add(panelPrincipal);
+        jugadores.setVisible(true);
+
+        return numeroDeJugadores.get();
+    }
+
+    public static String solicitarNombreDeJugador(int numDeJugador) {
+        JDialog nombreJugador = new JDialog();
+        nombreJugador.setTitle("Nombre del Jugador");
+        nombreJugador.setSize(500, 200);
+        nombreJugador.setLocationRelativeTo(null);
+        nombreJugador.setModal(true);
+        nombreJugador.setResizable(false);
+
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titulo = new JLabel("Ingrese el nombre del jugador " + numDeJugador + "\uD83D\uDC64", SwingConstants.CENTER);
+        titulo.setFont(new Font("Noto Sans", Font.BOLD, 18));
+        titulo.setForeground(new Color(0, 102, 204));
+        panelPrincipal.add(titulo, BorderLayout.NORTH);
+
+        JTextField campoNombre = new JTextField();
+        campoNombre.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+        campoNombre.setHorizontalAlignment(JTextField.CENTER);
+        panelPrincipal.add(campoNombre, BorderLayout.CENTER);
+
+        JPanel panelBoton = new JPanel();
+        JButton botonAceptar = new JButton("Aceptar");
+
+        botonAceptar.setFont(new Font("Noto Sans", Font.BOLD, 18));
+        botonAceptar.setBackground(new Color(220, 220, 220));
+        botonAceptar.setFocusPainted(false);
+
+        AtomicReference<String> nombre = new AtomicReference<>("");
+
+        botonAceptar.addActionListener(e -> {
+            if (!campoNombre.getText().trim().isEmpty()) {
+                nombre.set(campoNombre.getText().trim());
+                nombreJugador.dispose();
+            } else {
+                JOptionPane.showMessageDialog(nombreJugador, "Debe ingresar un nombre válido", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        campoNombre.addActionListener(e -> botonAceptar.doClick());
+
+        panelBoton.add(botonAceptar);
+        panelPrincipal.add(panelBoton, BorderLayout.SOUTH);
+
+        nombreJugador.add(panelPrincipal);
+        nombreJugador.setVisible(true);
+
+        return nombre.get();
+    }
 
 
 
