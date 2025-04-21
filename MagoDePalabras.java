@@ -1,6 +1,9 @@
 // Se importan las librerias necesarias para la clase.
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 // Se crea la clase MagoDePalabras.
 public class MagoDePalabras {
@@ -10,6 +13,12 @@ public class MagoDePalabras {
     private HashMap<String, Integer> puntuaciones;
     private HashSet<String> palabrasUsadas;
     private HashSet<Character> letrasEnJuego;
+    private List<Jugador> jugadores;
+    private int rondaActual;
+    private int turnoActual;
+    private JFrame ventanaJuegoActual;
+    private JTextArea areaPalabrasUsadas;
+    private JTextArea areaPuntuacion;
 
     // Se declara el constructor de la clase.
     public MagoDePalabras() {
@@ -224,83 +233,74 @@ public class MagoDePalabras {
 
     // Metodo para analizar la respuesta de acuerdo a las reglas del juego y segun el modo normal.
     public void analisisDeRespuestaNormal(Jugador jugador, String respuesta) {
-        Interfaz interfaz = new Interfaz();
-
         if (jugador.yaUsoEstaPalabra(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Ya usaste esa palabra en esta ronda");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Ya usaste esa palabra en esta ronda | -5 puntos.");
             return;
         }
         if (yaSeUsoEsaPalabra(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Esa palabra no esta disponible porque ya fue usada por otro jugador!");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Esa palabra ya fue usada por otro jugador | -5 puntos.");
             return;
         }
         if (!tieneLetrasValidasNormal(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Solo puedes usar las letras disponibles");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Solo puedes usar las letras disponibles | -5 puntos.");
             return;
         }
 
-        if (diccionario.containsKey(respuesta)) {
-            int puntos = diccionario.get(respuesta);
+        if (diccionario.containsKey(respuesta.toLowerCase())) {
+            int puntos = diccionario.get(respuesta.toLowerCase());
 
             jugador.agregarPalabra(respuesta, puntos);
             agregarPalabrasUsadas(respuesta);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraCorrecta(respuesta, puntos, jugador.getPuntuacionTotal());
+            InterfazGrafica.mostrarPalabraCorrecta(respuesta, puntos, jugador.getPuntuacionTotal());
         } else {
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("La palabra no está en el diccionario | -5 puntos.");
         }
     }
 
     // Metodo para analizar la respuesta de acuerdo a las reglas del juego y segun el modo experto.
     public void analisisDeRespuestaExperto(Jugador jugador, String respuesta) {
-        Interfaz interfaz = new Interfaz();
-
         if (jugador.yaUsoEstaPalabra(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Ya usaste esa palabra en esta ronda");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Ya usaste esa palabra en esta ronda | -5 puntos.");
             return;
         }
         if (yaSeUsoEsaPalabra(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Esa palabra no esta disponible porque fue usada por otro jugador.");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Esa palabra ya fue usada por otro jugador | -5 puntos.");
             return;
         }
         if (!tieneLetrasValidasExperto(respuesta)) {
-            interfaz.mostrarPalabraIncorrecta("Solo puedes usar las letras disponibles.");
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("Solo puedes usar las letras disponibles | -5 puntos.");
             return;
         }
 
-        if (diccionario.containsKey(respuesta)) {
-            int puntos = diccionario.get(respuesta);
+        if (diccionario.containsKey(respuesta.toLowerCase())) {
+            int puntos = diccionario.get(respuesta.toLowerCase());
 
             jugador.agregarPalabra(respuesta, puntos);
             agregarPalabrasUsadas(respuesta);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraCorrecta(respuesta, puntos, jugador.getPuntuacionTotal());
+            InterfazGrafica.mostrarPalabraCorrecta(respuesta, puntos, jugador.getPuntuacionTotal());
         } else {
             jugador.agregarPalabra(respuesta, -5);
             puntuaciones.put(jugador.getNombre(), jugador.getPuntuacionTotal());
-            interfaz.mostrarPalabraIncorrecta("La palabra no es válida, tienes -5 puntos.");
+            InterfazGrafica.mostrarPalabraIncorrecta("La palabra no está en el diccionario. -5 puntos.");
         }
     }
+
 
     // Metodo para formar las palabras ya formadas por los jugadores.
     public void mostrarPalabrasUsadas() {
@@ -326,133 +326,147 @@ public class MagoDePalabras {
                 });
     }
 
+    private void mostrarTurnoActual() {
+        Jugador jugadorActual = jugadores.get(turnoActual);
+        ventanaJuegoActual = new JFrame("\uD83C\uDFAE Mago de Palabras - Ronda " + rondaActual + " - Turno de: " + jugadorActual.getNombre());
+        ventanaJuegoActual.setSize(800, 600);
+        ventanaJuegoActual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventanaJuegoActual.setLocationRelativeTo(null);
 
-    // Metodo para jugar una ronda del juego del Mago De Las Palabras.
-    public void jugarRondaDePalabras(Scanner scanner, List <Jugador> jugadores, int modoDeJuego,int NumeroDeRonda) {
-        Interfaz interfaz = new Interfaz();
-        boolean rondaActiva = true;
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        palabrasUsadas.clear();
-        jugadores.forEach(jugador -> jugador.reiniciarPalabrasUsadas());
+        JPanel panelBanner = new JPanel();
+        panelBanner.setLayout(new BoxLayout(panelBanner, BoxLayout.Y_AXIS));
+        panelBanner.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel banner = new JLabel(new ImageIcon("banner.gif"));
+        panelBanner.add(banner);
+        banner.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        HashSet<Character> letras;
+        JLabel InformacionDeTurno = new JLabel("Ronda " + rondaActual + "                    Turno de: " + jugadorActual.getNombre());
+        InformacionDeTurno.setFont(new Font("N", Font.BOLD, 24));
+        InformacionDeTurno.setForeground(new Color(0, 102, 204));
+        InformacionDeTurno.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        if (modoDeJuego == 1) {
-             letras = generarLetrasAleatoriasNormal();
-        } else {
-             letras = generarLetrasAleatoriasExperto();
-        }
+        panelBanner.add(InformacionDeTurno);
+        panelPrincipal.add(panelBanner, BorderLayout.NORTH);
 
-        agregarLetrasEnJuego(letras);
+        JPanel panelCentral = new JPanel(new BorderLayout());
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
-        if (scanner.hasNextLine()) {
-            scanner.nextLine();
-        }
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new BoxLayout(panelSuperior, BoxLayout.X_AXIS));
+        panelSuperior.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
 
-        interfaz.mostrarInformacionDelModo(modoDeJuego);
+        JPanel panelPalabrasUsadas = new JPanel(new BorderLayout());
+        panelPalabrasUsadas.setPreferredSize(new Dimension(150, 300));
 
-        if (modoDeJuego == 1) {
-            int pasesConsecutivos = 0;
-            while (rondaActiva) {
-                rondaActiva = false;
+        JLabel tituloPalabrasUsadas = new JLabel("\uD83C\uDFAF Palabras Usadas");
+        tituloPalabrasUsadas.setForeground(new Color(0, 102, 204));
+        tituloPalabrasUsadas.setFont(new Font("Noto Sans", Font.BOLD, 14));
+        tituloPalabrasUsadas.setHorizontalAlignment(JLabel.CENTER);
+        panelPalabrasUsadas.add(tituloPalabrasUsadas, BorderLayout.NORTH);
 
-                Iterator<Jugador> iterator = jugadores.iterator();
-                while (iterator.hasNext()) {
-                    Jugador jugador = iterator.next();
-                    interfaz.imprimirRonda(NumeroDeRonda, letras);
-                    mostrarPalabrasUsadas();
-                    boolean noContesto = true;
+        areaPalabrasUsadas = new JTextArea();
+        areaPalabrasUsadas.setEditable(false);
+        panelPalabrasUsadas.add(new JScrollPane(areaPalabrasUsadas), BorderLayout.CENTER);
 
-                    while (noContesto) {
-                        interfaz.indicarTurnoDeJugador(jugador);
-                        String respuesta = scanner.nextLine().trim().toLowerCase();
+        JPanel panelLetras = new JPanel(new BorderLayout());
+        panelLetras.setPreferredSize(new Dimension(400, 300));
 
-                        if (!respuesta.isEmpty()) {
-                            if (validarEntrada(jugador, respuesta)) {
-                                noContesto = false;
-                                pasesConsecutivos = 0;
-                                rondaActiva = true;
-                            }
-                            analisisDeRespuestaNormal(jugador, respuesta);
-                        } else {
-                            noContesto = false;
-                            pasesConsecutivos++;
-                            if (pasesConsecutivos >= jugadores.size()) {
-                                return;
-                            }
-                        }
-                    }
-                    if (!rondaActiva) {
-                        break;
-                    }
-                }
-            }
-        } else {
-            while (rondaActiva) {
-                int pasesConsecutivos = 0;
-                rondaActiva = false;
+        JLabel tituloLetras = new JLabel("Letras Disponibles");
+        tituloLetras.setForeground(new Color(0, 102, 204));
+        tituloLetras.setFont(new Font("Noto Sans", Font.BOLD, 14));
+        tituloLetras.setHorizontalAlignment(JLabel.CENTER);
+        panelLetras.add(tituloLetras, BorderLayout.NORTH);
 
-                Iterator<Jugador> iterator = jugadores.iterator();
-                while (iterator.hasNext()) {
-                    Jugador jugador = iterator.next();
-                    interfaz.imprimirRonda(NumeroDeRonda, letras);
-                    mostrarPalabrasUsadas();
-                    boolean noContesto = true;
+        JLabel labelLetras = new JLabel(String.valueOf(letrasEnJuego), JLabel.CENTER);        labelLetras.setFont(new Font("Noto Sans", Font.BOLD, 24));
+        panelLetras.add(labelLetras, BorderLayout.CENTER);
 
-                    while (noContesto) {
-                        interfaz.indicarTurnoDeJugador(jugador);
-                        String respuesta = scanner.nextLine().trim().toLowerCase();
+        JPanel panelPuntuacion = new JPanel(new BorderLayout());
+        panelPuntuacion.setPreferredSize(new Dimension(150, 300));
 
-                        if (!respuesta.isEmpty()) {
-                            if (validarEntradaExperto(jugador, respuesta)) {
-                                noContesto = false;
-                                pasesConsecutivos = 0;
-                                rondaActiva = true;
-                            }
-                            analisisDeRespuestaExperto(jugador, respuesta);
-                        } else {
-                            noContesto = false;
-                            pasesConsecutivos++;
-                            if (pasesConsecutivos >= jugadores.size()) {
-                                return;
-                            }
-                        }
-                    }
+        JLabel tituloPuntuacion = new JLabel("\uD83C\uDFC6 Puntuaciones");
+        tituloPuntuacion.setForeground(new Color(0, 102, 204));
+        tituloPuntuacion.setFont(new Font("Noto Sans", Font.BOLD, 14));
+        tituloPuntuacion.setHorizontalAlignment(JLabel.CENTER);
+        panelPuntuacion.add(tituloPuntuacion, BorderLayout.NORTH);
 
-                    if (!rondaActiva) {
-                        break;
-                    }
-                }
-            }
-        }
+        areaPuntuacion = new JTextArea();
+        areaPuntuacion.setEditable(false);
+        panelPuntuacion.add(new JScrollPane(areaPuntuacion), BorderLayout.CENTER);
+
+        panelSuperior.add(panelPalabrasUsadas);
+        panelSuperior.add(Box.createRigidArea(new Dimension(15, 0)));
+        panelSuperior.add(panelLetras);
+        panelSuperior.add(Box.createRigidArea(new Dimension(15, 0)));
+        panelSuperior.add(panelPuntuacion);
+
+        JPanel panelEscritura = new JPanel(new BorderLayout());
+        panelEscritura.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+
+        JLabel tituloEscritura = new JLabel("Ingresa tu palabra \u270D\uFE0F");
+        tituloEscritura.setForeground(new Color(0, 102, 204));
+        tituloEscritura.setFont(new Font("Noto Sans", Font.BOLD, 14));
+        tituloEscritura.setHorizontalAlignment(JLabel.CENTER);
+        panelEscritura.add(tituloEscritura, BorderLayout.NORTH);
+        panelEscritura.add(Box.createRigidArea(new Dimension(0, 5)), BorderLayout.CENTER);
+
+        JTextField campoEscritura = new JTextField();
+        campoEscritura.setFont(new Font("Noto Sans", Font.PLAIN, 18));
+        panelEscritura.add(campoEscritura, BorderLayout.SOUTH);
+
+        panelCentral.add(panelSuperior, BorderLayout.CENTER);
+        panelCentral.add(panelEscritura, BorderLayout.SOUTH);
+
+        panelPrincipal.add(panelCentral, BorderLayout.CENTER);
+
+        JPanel panelBotones = new JPanel(new GridLayout(1, 3, 15, 15));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+
+        JButton botonPuntuar = new JButton("Puntuar Palabra");
+        JButton botonPasarTurno = new JButton("Pasar Turno");
+        JButton botonRegistrar = new JButton("Registrar Palabra");
+
+        Font fuenteBotones = new Font("Noto Sans", Font.BOLD, 16);
+        botonPuntuar.setFont(fuenteBotones);
+        botonPuntuar.setBackground(new Color(220, 220, 220));
+        botonPuntuar.setBorder(BorderFactory.createEtchedBorder());
+
+        botonPasarTurno.setFont(fuenteBotones);
+        botonPasarTurno.setBackground(new Color(220, 220, 220));
+        botonPasarTurno.setBorder(BorderFactory.createEtchedBorder());
+
+        botonRegistrar.setFont(fuenteBotones);
+        botonRegistrar.setBackground(new Color(220, 220, 220));
+        botonRegistrar.setBorder(BorderFactory.createEtchedBorder());
+
+        panelBotones.add(botonPuntuar);
+        panelBotones.add(botonPasarTurno);
+        panelBotones.add(botonRegistrar);
+
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        botonPuntuar.addActionListener(e -> {
+        });
+
+        campoEscritura.addActionListener(e -> botonPuntuar.doClick());
+
+
+        botonPasarTurno.addActionListener(e -> {
+        });
+
+        botonRegistrar.addActionListener(e -> {
+        });
+
+        ventanaJuegoActual.add(panelPrincipal);
+        ventanaJuegoActual.setVisible(true);
     }
 
-    // Metodo para jugar al Mago de Las palabras.
+
+
     public void iniciarMagoDePalabras() {
-        Scanner scanner = new Scanner(System.in);
-        Interfaz interfaz = new Interfaz();
 
-        interfaz.imprimirTituloDelJuego();
-
-        int numeroDeJugadores = interfaz.solicitarJugadores(scanner);
-        List <Jugador> jugadores = new ArrayList <>();
-
-        for (int i = 0; i < numeroDeJugadores; i++) {
-            String nombreDeJugador = interfaz.solicitarNombreDeJugador(scanner, i + 1);
-            Jugador jugador = new Jugador(nombreDeJugador);
-            jugadores.add(jugador);
-            puntuaciones.put(nombreDeJugador, 0);
-        }
-
-        int modoDeJuego = interfaz.solicitarModoDeJuego(scanner);
-        interfaz.limpiarPantalla();
-
-        for (int NumeroDeRonda = 1; NumeroDeRonda <= 3; NumeroDeRonda++) {
-            jugarRondaDePalabras(scanner, jugadores, modoDeJuego, NumeroDeRonda);
-        }
-
-        interfaz.limpiarPantalla();
-        interfaz.imprimirResultados(jugadores);
     }
 
 
