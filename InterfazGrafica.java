@@ -21,7 +21,8 @@ public class InterfazGrafica {
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel panelDeTitulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        ImageIcon imagenIcono = new ImageIcon("C:\\Users\\14321\\Downloads\\Practica-5-main\\PantallaInicial.gif");
+        ImageIcon imagenIcono = new ImageIcon("C:\\Users\\PC OSTRICH\\Practica-6\\PantallaInicial.gif");
+       // ImageIcon imagenIcono = new ImageIcon("C:\\Users\\14321\\Downloads\\Practica-5-main\\PantallaInicial.gif");
         JLabel labelImagen = new JLabel(imagenIcono);
         panelDeTitulo.add(labelImagen);
 

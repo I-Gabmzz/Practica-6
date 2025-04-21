@@ -344,7 +344,7 @@ public class MagoDePalabras {
         JPanel panelBanner = new JPanel();
         panelBanner.setLayout(new BoxLayout(panelBanner, BoxLayout.Y_AXIS));
         panelBanner.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JLabel banner = new JLabel(new ImageIcon("banner.gif"));
+        JLabel banner = new JLabel(new ImageIcon("C:\\Users\\PC OSTRICH\\Practica-6\\banner.gif"));
         panelBanner.add(banner);
         banner.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -546,6 +546,7 @@ public class MagoDePalabras {
         cargarArchivo("C:\\Users\\PC OSTRICH\\Practica-6\\palabras.txt");
         jugador.eliminarPalabra(respuesta,+5);
     }
+
     //Metodo para jugar una ronda del juego en el cual se inicializan los jugadores,
     //se juega dependiendo el modo de juego y el numero de ronda en el que se encuentre el juego
     public void jugarRondaDePalabras(List<Jugador> jugadores, int modoDeJuego, int numeroDeRonda) {
@@ -623,7 +624,8 @@ public class MagoDePalabras {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JLabel banner = new JLabel(new ImageIcon("C:\\Users\\14321\\Downloads\\Practica-5-main\\bannerFinal.gif"));
+        JLabel banner = new JLabel(new ImageIcon("C:\\Users\\PC OSTRICH\\Practica-6\\bannerFinal.gif"));
+        // JLabel banner = new JLabel(new ImageIcon("C:\\Users\\14321\\Downloads\\Practica-5-main\\bannerFinal.gif"));
         banner.setHorizontalAlignment(JLabel.CENTER);
         panel.add(banner, BorderLayout.NORTH);
 
@@ -656,7 +658,7 @@ public class MagoDePalabras {
 
         panel.add(panelResultados, BorderLayout.CENTER);
 
-        JButton botonSalir = new JButton("Salir del Juego");
+        JButton botonSalir = new JButton("  Salir del Juego  ");
 
         botonSalir.setFont(new Font("Noto Sans", Font.BOLD, 16));
         botonSalir.setFocusPainted(false);
