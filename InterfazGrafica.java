@@ -1,12 +1,15 @@
+//Se importan las librerias necesarias para la clase
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class InterfazGrafica {
     private static boolean juegoIniciado = false;
 
-
+    //Metodo para mostrar el menu inicial del juego, en el cual se muestra el titulo del juego, una gift animado y distintos botones para que el usuario
+    //pueda interactuar
     public static void menuInicial() {
         JFrame ventana = new JFrame("Mago De Palabras");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,7 +91,7 @@ public class InterfazGrafica {
         }
     }
 
-
+    //Metodo para mostrar los creditos, es decir quien desarrollo el programa, se muestra una pequeña ventana con la informacion correspondiente
     public static void mostrarCreditos() {
         JPanel panelCreditos = new JPanel(new BorderLayout(10, 10));
         panelCreditos.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -135,6 +138,7 @@ public class InterfazGrafica {
         creditos.setVisible(true);
     }
 
+    //Metodo para solitar cuantos jugadores jugaran, en el cual se muestran 3 botones para la cantidad de jugadores que se desee
     public static int solicitarJugadores() {
         AtomicInteger numeroDeJugadores = new AtomicInteger();
 
@@ -194,6 +198,7 @@ public class InterfazGrafica {
         return numeroDeJugadores.get();
     }
 
+    //Metodo para solicitar el nombre de cada jugador dependidendo de la cantidad de jugadores que se hayan ingresado
     public static String solicitarNombreDeJugador(int numDeJugador) {
         JDialog nombreJugador = new JDialog();
         nombreJugador.setTitle("Nombre del Jugador");
@@ -244,9 +249,8 @@ public class InterfazGrafica {
         return nombre.get();
     }
 
-
-
-
+    //Metodo para solicitar el modo de juego, el usuario puede interactuar con 2 botones segun el modo de juego que desee
+    //tambien se muestra una pequeña descripcion de cada modo de juego
     public static int solicitarModoDeJuego() {
         AtomicInteger modoSeleccionado = new AtomicInteger(0);
 
@@ -306,16 +310,19 @@ public class InterfazGrafica {
         return modoSeleccionado.get();
     }
 
+    // Metodo para mostrar un aviso acerca de que la palabra escrita es correcta
     public static void mostrarPalabraCorrecta(String aviso, int puntuacion, int puntosTotales) {
         String mensaje = "La palabra es correcta | " + aviso + " | -----> + " + puntuacion
                 + " puntos \u2705 | (Puntos Totales: " + puntosTotales + ")";
         JOptionPane.showMessageDialog(null, mensaje, "Correcto", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // Metodo para mostrar un aviso acerca de que la palabra escrita es incorrecta
     public static void mostrarPalabraIncorrecta(String aviso) {
         JOptionPane.showMessageDialog(null, "\u274C " + aviso, "Incorrecto", JOptionPane.ERROR_MESSAGE);
     }
 
+    // Metodo para avisar que un nombre se duplico y no es valido.
     public static void mostrarMensajeError(){
         JDialog nombreIncorrecto = new JDialog();
         JOptionPane.showMessageDialog(nombreIncorrecto, "No puede ingresar nombres duplicados", "Error", JOptionPane.WARNING_MESSAGE);

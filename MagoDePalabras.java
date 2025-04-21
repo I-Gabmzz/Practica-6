@@ -539,10 +539,66 @@ public class MagoDePalabras {
         jugador.eliminarPalabra(respuesta,+5);
     }
 
-    public void iniciarMagoDePalabras() {
+    public void jugarRondaDePalabras(List<Jugador> jugadores, int modoDeJuego, int numeroDeRonda) {
+        this.jugadores = jugadores;
+        this.modoDeJuego = modoDeJuego;
+        this.rondaActual = numeroDeRonda;
+        this.turnoActual = 0;
+        this.pasesConsecutivos = 0;
+        this.rondaActiva = true;
 
+        palabrasUsadas.clear();
+        jugadores.forEach(jugador -> jugador.reiniciarPalabrasUsadas());
+
+        HashSet<Character> letras = (modoDeJuego == 1) ?
+                generarLetrasAleatoriasNormal() : generarLetrasAleatoriasExperto();
+        agregarLetrasEnJuego(letras);
+
+        mostrarTurnoActual();
     }
 
 
+    public void iniciarMagoDePalabras() {
+        InterfazGrafica.menuInicial();
+        jugadores = new ArrayList<>();
+
+        int numeroDeJugadores = InterfazGrafica.solicitarJugadores();
+
+        for (int i = 0; i < numeroDeJugadores; i++) {
+            String nombreDeJugador;
+            boolean nombreValido = false;
+
+            while (!nombreValido) {
+                nombreDeJugador = InterfazGrafica.solicitarNombreDeJugador(i + 1);
+                nombreValido = true;
+
+                for (Jugador jugador : jugadores) {
+                    if (jugador.getNombre().equalsIgnoreCase(nombreDeJugador)) {
+                        InterfazGrafica.mostrarMensajeError();
+                        nombreValido = false;
+                        break;
+                    }
+                }
+                if (nombreValido && !nombreDeJugador.trim().isEmpty()) {
+                    Jugador jugador = new Jugador(nombreDeJugador);
+                    jugadores.add(jugador);
+                    puntuaciones.put(nombreDeJugador, 0);
+                }
+            }
+        }
+
+        modoDeJuego = InterfazGrafica.solicitarModoDeJuego();
+        for (rondaActual = 1; rondaActual <= 3; rondaActual++) {
+            jugarRondaDePalabras(jugadores, modoDeJuego, rondaActual);
+
+            while (rondaActiva) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
